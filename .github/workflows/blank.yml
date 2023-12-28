@@ -30,7 +30,7 @@ jobs:
         run: echo "${{ secrets.DEBUG_KEYSTORE_BASE64 }}" | base64 --decode > $HOME/.android/debug.keystore
 
       - name: Build Debug APK & Upload
-        run: flutter build apk --flavor dev
+        run: flutter build apk
       - uses: actions/upload-artifact@v3
         with:
           name: output
