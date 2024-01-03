@@ -5,10 +5,8 @@ name: CI
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "develop" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -26,27 +24,50 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
+      # - name: Set up JDK 11
+      #   uses: actions/setup-java@v2
+      #   with:
+      #     java-version: '11'
+      #     distribution: 'adopt'
+
+
+      # - uses: subosito/flutter-action@v2.3.0
+      #   with:
+      #     flutter-version: '3.3.1'
+
+      # - name: Install packages
+      #   run: flutter pub get
+
+      # - name: Decoding Keystore file
+      #   run: echo "${{ secrets.DEBUG_KEYSTORE_BASE64 }}" | base64 --decode > $HOME/.android/debug.keystore
+
+      # - name: Build Debug APK & Upload
+      #   run: flutter build apk
+      # - uses: actions/upload-artifact@v3
+      #   with:
+      #     name: app-release
+      #     path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Get version from pubspec.yaml
+        id: get_version
+        run: |
+          version=$(grep 'version:' pubspec.yaml | awk '{print $2}')
+          echo "The version is $version"
+          echo "::set-output name=version::$version"
+  
+      - name: Checkout main Branch
+        uses: actions/checkout@v2
         with:
-          java-version: '11'
-          distribution: 'adopt'
+          ref: main
+  
+      # - name: Update Version in main Branch
+      #   run: |
+      #     version=${{ steps.get_version.outputs.version }}
+      #     sed -i "s/version: .*/version: $version/" pubspec.yaml
+      #     git config user.name '6cessfuldev'
+      #     git config user.email '6cessfuldev@gmail.com'
+      #     git add pubspec.yaml
+      #     git commit -m "Update version to $version"
+      #     git push origin main
 
-
-      - uses: subosito/flutter-action@v2.3.0
-        with:
-          flutter-version: '3.3.1'
-
-      - name: Install packages
-        run: flutter pub get
-
-      - name: Decoding Keystore file
-        run: echo "${{ secrets.DEBUG_KEYSTORE_BASE64 }}" | base64 --decode > $HOME/.android/debug.keystore
-
-      - name: Build Debug APK & Upload
-        run: flutter build apk
-      - uses: actions/upload-artifact@v3
-        with:
-          name: app-release
-          path: build/app/outputs/flutter-apk/app-release.apk
 
