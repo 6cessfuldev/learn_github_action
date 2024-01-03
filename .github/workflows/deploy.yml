@@ -47,9 +47,9 @@ jobs:
           new_version="${base_version}+${build_number}"
           echo "New version: $new_version"
           sed -i "s/version: .*/version: $new_version/" pubspec.yaml
-
+          
       - name: Build Debug APK & Upload
-        run: flutter build apk --release --build-number=$new_version
+        run: flutter build apk --release
         
       # - uses: actions/upload-artifact@v3
       #   with:
