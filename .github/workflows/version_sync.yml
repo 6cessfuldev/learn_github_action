@@ -9,6 +9,21 @@ jobs:
     runs-on: macos-latest
 
     steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.SECRET_GITHUB_TOKEN }}
+
+      - name: Calculate new version
+        run: |
+          version=$(grep 'version:' pubspec.yaml | awk '{print $2}')
+          echo "Current version: $version"
+          IFS='+' read -r base_version build_number <<< "$version"
+          build_number=$((build_number + 1))
+          new_version="${base_version}+${build_number}"
+          echo "New version: $new_version"
+          echo "NEW_VERSION=$new_version" >> $GITHUB_ENV
           
       - name: git config
         run: |
@@ -21,18 +36,9 @@ jobs:
           ref: main
           token: ${{ secrets.SECRET_GITHUB_TOKEN }}
 
-      - name: Get current version and increment build number
+      - name: pubspec 수정 및 커밋 푸쉬
         run: |
-          version=$(grep 'version:' pubspec.yaml | awk '{print $2}')
-          echo "Current version: $version"
-          IFS='+' read -r base_version build_number <<< "$version"
-          build_number=$((build_number + 1))
-          new_version="${base_version}+${build_number}"
-          echo "New version: $new_version"
           sed -i '' "s/version: .*/version: $new_version/" pubspec.yaml
-          
-      - name: Commit updated version
-        run: |
           git add pubspec.yaml
           git commit -m "빌드 넘버 업데이트 to $new_version"
           git push origin main
@@ -43,18 +49,9 @@ jobs:
           ref: develop
           token: ${{ secrets.SECRET_GITHUB_TOKEN }}
         
-      - name: Get current version and increment build number
+      - name: pubspec 수정 및 커밋 푸쉬
         run: |
-          version=$(grep 'version:' pubspec.yaml | awk '{print $2}')
-          echo "Current version: $version"
-          IFS='+' read -r base_version build_number <<< "$version"
-          build_number=$((build_number + 1))
-          new_version="${base_version}+${build_number}"
-          echo "New version: $new_version"
           sed -i '' "s/version: .*/version: $new_version/" pubspec.yaml
-          
-      - name: Commit updated version
-        run: |
           git add pubspec.yaml
           git commit -m "빌드 넘버 업데이트 to $new_version"
           git push origin develop
