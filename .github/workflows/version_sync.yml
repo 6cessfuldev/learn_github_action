@@ -21,10 +21,6 @@ jobs:
           new_version="${base_version}+${build_number}"
           echo "Deploying version: $new_version"
 
-      - name: Deploy
-        run: |
-          flutter build apk --release --build-number=$new_version
-
       - name: Checkout main Branch
         uses: actions/checkout@v3
         with:
