@@ -9,21 +9,49 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Increment build number for deployment
+      - name: git config
         run: |
-          version=$(grep 'version:' pubspec.yaml | awk '{print $2}')
-          echo "Current version: $version"
-          IFS='+' read -r base_version build_number <<< "$version"
-          build_number=$((build_number + 1))
-          new_version="${base_version}+${build_number}"
-          echo "Deploying version: $new_version"
+          git config --global user.name '6cessfuldev'
+          git config --global user.email '6cessfuldev@gmail.com'
 
       - name: Checkout main Branch
         uses: actions/checkout@v3
         with:
           ref: main
 
-      
+      - name: Get current version and increment build number
+        run: |
+          version=$(grep 'version:' pubspec.yaml | awk '{print $2}')
+          echo "Current version: $version"
+          IFS='+' read -r base_version build_number <<< "$version"
+          build_number=$((build_number + 1))
+          new_version="${base_version}+${build_number}"
+          echo "New version: $new_version"
+          sed -i "s/version: .*/version: $new_version/" pubspec.yaml
+          
+      - name: Commit updated version
+        run: |
+          git add pubspec.yaml
+          git commit -m "빌드 넘버 업데이트 to $new_version"
+          git push origin main
+
+      - name: Checkout develop Branch
+        uses: actions/checkout@v3
+        with:
+          ref: develop
+        
+      - name: Get current version and increment build number
+        run: |
+          version=$(grep 'version:' pubspec.yaml | awk '{print $2}')
+          echo "Current version: $version"
+          IFS='+' read -r base_version build_number <<< "$version"
+          build_number=$((build_number + 1))
+          new_version="${base_version}+${build_number}"
+          echo "New version: $new_version"
+          sed -i "s/version: .*/version: $new_version/" pubspec.yaml
+          
+      - name: Commit updated version
+        run: |
+          git add pubspec.yaml
+          git commit -m "빌드 넘버 업데이트 to $new_version"
+          git push origin develop
