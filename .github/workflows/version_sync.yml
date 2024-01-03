@@ -9,11 +9,6 @@ jobs:
     runs-on: macos-latest
 
     steps:
-
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.SECRET_GITHUB_TOKEN }}
           
       - name: git config
         run: |
@@ -24,6 +19,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: main
+          token: ${{ secrets.SECRET_GITHUB_TOKEN }}
 
       - name: Get current version and increment build number
         run: |
@@ -45,6 +41,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: develop
+          token: ${{ secrets.SECRET_GITHUB_TOKEN }}
         
       - name: Get current version and increment build number
         run: |
