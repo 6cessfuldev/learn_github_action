@@ -7,9 +7,6 @@ on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   pull_request:
     branches: [ "develop" ]
-  push:
-    branches: [ "develop" ]
-
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -44,24 +41,22 @@ jobs:
       # - name: Decoding Keystore file
       #   run: echo "${{ secrets.DEBUG_KEYSTORE_BASE64 }}" | base64 --decode > $HOME/.android/debug.keystore
 
+      # - name: Get current version and increment build number
+      #   run: |
+      #     version=$(grep 'version:' pubspec.yaml | awk '{print $2}')
+      #     echo "Current version: $version"
+      #     IFS='+' read -r base_version build_number <<< "$version"
+      #     build_number=$((build_number + 1))
+      #     new_version="${base_version}+${build_number}"
+      #     echo "New version: $new_version"
+      #     sed -i "s/version: .*/version: $new_version/" pubspec.yaml
+  
       # - name: Build Debug APK & Upload
       #   run: flutter build apk
       # - uses: actions/upload-artifact@v3
       #   with:
       #     name: app-release
       #     path: build/app/outputs/flutter-apk/app-release.apk
-
-      - name: Get version from pubspec.yaml
-        id: get_version
-        run: |
-          version=$(grep 'version:' pubspec.yaml | awk '{print $2}')
-          echo "The version is $version"
-          echo "::set-output name=version::$version"
-  
-      - name: Checkout main Branch
-        uses: actions/checkout@v2
-        with:
-          ref: main
   
       # - name: Update Version in main Branch
       #   run: |
