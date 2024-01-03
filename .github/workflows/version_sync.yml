@@ -1,0 +1,29 @@
+name: version sync
+
+on:
+  pull_request:
+    branches: [ "develop", "main" ]
+
+jobs:
+  version_sync:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Increment build number for deployment
+        run: |
+          version=$(grep 'version:' pubspec.yaml | awk '{print $2}')
+          echo "Current version: $version"
+          IFS='+' read -r base_version build_number <<< "$version"
+          build_number=$((build_number + 1))
+          new_version="${base_version}+${build_number}"
+          echo "Deploying version: $new_version"
+
+      - name: Checkout main Branch
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      
