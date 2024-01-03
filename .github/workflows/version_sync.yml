@@ -38,9 +38,9 @@ jobs:
 
       - name: pubspec 수정 및 커밋 푸쉬
         run: |
-          sed -i '' "s/version: .*/version: $new_version/" pubspec.yaml
+          sed -i '' "s/version: .*/version: $NEW_VERSION/" pubspec.yaml
           git add pubspec.yaml
-          git commit -m "빌드 넘버 업데이트 to $new_version"
+          git commit -m "빌드 넘버 업데이트 to $NEW_VERSION"
           git push origin main
 
       - name: Checkout develop Branch
@@ -51,7 +51,7 @@ jobs:
         
       - name: pubspec 수정 및 커밋 푸쉬
         run: |
-          sed -i '' "s/version: .*/version: $new_version/" pubspec.yaml
+          sed -i '' "s/version: .*/version: $NEW_VERSION/" pubspec.yaml
           git add pubspec.yaml
-          git commit -m "빌드 넘버 업데이트 to $new_version"
+          git commit -m "빌드 넘버 업데이트 to $NEW_VERSION"
           git push origin develop
