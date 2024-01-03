@@ -27,7 +27,7 @@ jobs:
           build_number=$((build_number + 1))
           new_version="${base_version}+${build_number}"
           echo "New version: $new_version"
-          sed -i "s/version: .*/version: $new_version/" pubspec.yaml
+          sed -i '' "s/version: .*/version: $new_version/" pubspec.yaml
           
       - name: Commit updated version
         run: |
@@ -48,7 +48,7 @@ jobs:
           build_number=$((build_number + 1))
           new_version="${base_version}+${build_number}"
           echo "New version: $new_version"
-          sed -i "s/version: .*/version: $new_version/" pubspec.yaml
+          sed -i '' "s/version: .*/version: $new_version/" pubspec.yaml
           
       - name: Commit updated version
         run: |
